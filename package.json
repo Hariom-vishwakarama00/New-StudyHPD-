@@ -1,0 +1,20 @@
+{
+  "name": "studyhpd",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "description": "StudyHPD - B.Tech Notes, Important Questions & Study Material (Cloudflare Workers + D1 + R2, Google sign-in, email codes)",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:migrate": "wrangler d1 migrations apply studyhpd --remote",
+    "db:migrate:local": "wrangler d1 migrations apply studyhpd --local",
+    "test": "node --test \"test/*.test.mjs\""
+  },
+  "devDependencies": {
+    "wrangler": "^4.156.0"
+  },
+  "engines": {
+    "node": ">=18 (tests need Node 22+)"
+  }
+}

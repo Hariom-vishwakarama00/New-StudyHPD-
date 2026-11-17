@@ -1,0 +1,58 @@
+name = "www"   # live at https://www.studyhpd.workers.dev (old https://studyhpd.studyhpd.workers.dev 301-redirects here, see old-url-redirect/)
+main = "site/_worker.js"
+compatibility_date = "2026-08-01"
+compatibility_flags = ["nodejs_compat"]
+keep_vars = true   # keep variables you add in the dashboard (e.g. GOOGLE_CLIENT_ID, MAIL_FROM) on every deploy
+workers_dev = true
+
+[assets]
+directory = "site"
+binding = "ASSETS"
+html_handling = "auto-trailing-slash"
+not_found_handling = "none"
+run_worker_first = ["/", "/index.html", "/sw.js", "/robots.txt", "/sitemap.xml"]   # "/" gets per-page meta for Google; /sw.js is a kill-switch for the old offline service worker (no-cache)
+
+
+# The site's public address, used for canonical links, the sitemap and share previews.
+# Change it when the site moves to its own domain (e.g. https://www.studyhpd.tech).
+[vars]
+SITE_URL = "https://www.studyhpd.workers.dev"
+
+# Database (D1) on the StudyHPD Cloudflare account. IDs are not secrets.
+[[d1_databases]]
+binding = "DB"
+database_name = "studyhpd"
+database_id = "55e29830-4a68-4033-bb83-18b679b0176e"
+migrations_dir = "migrations"
+
+# File storage (PDFs, thumbnails, UPI QR, payment screenshots).
+# R2 is the default the code prefers. R2 is not enabled on this account yet (Cloudflare asks for a
+# payment method to turn it on), so files currently live in this free KV namespace (max 25 MB per file).
+[[kv_namespaces]]
+binding = "FILES_KV"
+id = "a27565094078496794b07fc4e81f2f85"
+
+# To switch to R2 later: enable R2 in the dashboard, create the bucket
+#   npx wrangler r2 bucket create studyhpd-files
+# then uncomment the block below and deploy. Keep FILES_KV bound too: new uploads go to R2,
+# and older files are still read from KV automatically.
+# [[r2_buckets]]
+# binding = "FILES"
+# bucket_name = "studyhpd-files"
+
+# Optional login settings (or set them in the app: Admin -> Settings -> Login & email verification)
+#   Variable (plain text): GOOGLE_CLIENT_ID = "1234567890-xxxx.apps.googleusercontent.com"
+#   Variable (plain text): MAIL_FROM        = "StudyHPD <yourgmail@gmail.com>"
+#   Secret:                BREVO_API_KEY  (or RESEND_API_KEY)
+#     npx wrangler secret put BREVO_API_KEY
+# Never write API keys in this file.
+
+# Secret (NOT stored here): SETUP_TOKEN — only needed to create a NEW admin with a one-time setup link
+#   npx wrangler secret put SETUP_TOKEN
+#   or Dashboard -> Workers & Pages -> www -> Settings -> Variables and Secrets -> Add (type: Secret)
+
+# Optional, after studyhpd.tech is active in your Cloudflare account:
+# routes = [
+#   { pattern = "studyhpd.tech", custom_domain = true },
+#   { pattern = "www.studyhpd.tech", custom_domain = true },
+# ]

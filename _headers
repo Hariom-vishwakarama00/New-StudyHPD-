@@ -1,0 +1,20 @@
+# Security headers for every static file (pages, JS, CSS, images). The worker adds the same headers to API responses.
+# Generated from CSP / SECURITY_HEADERS in _worker.js; test/security.test.mjs checks they stay in sync.
+/*
+  Strict-Transport-Security: max-age=31536000
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(self "https://checkout.razorpay.com" "https://api.razorpay.com")
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'wasm-unsafe-eval' https://accounts.google.com/gsi/client https://checkout.razorpay.com https://*.razorpay.com; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://accounts.google.com/gsi/ https://*.razorpay.com; frame-src https://accounts.google.com/gsi/ https://*.razorpay.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+
+# Big files that rarely change: the PDF viewer library (1.7 MB) and images are kept by the browser instead of
+# being re-checked on every visit. If you replace one of these files, give it a new name or wait up to a week.
+/vendor/*
+  Cache-Control: public, max-age=604800
+/img/*
+  Cache-Control: public, max-age=86400
+  Content-Type: application/vnd.android.package-archive
+  Content-Disposition: attachment; filename="StudyHPD.apk"
+  Cache-Control: public, max-age=3600
